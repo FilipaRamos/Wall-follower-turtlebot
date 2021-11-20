@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>turtlebot3_wall</name>
+  <version>0.0.0</version>
+  <description>The turtlebot3_wall package enables a wall follower turtlebot. 
+  This is a reactive robot that simply finds a wall and sticks close to it.</description>
+
+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
+  <!-- Example:  -->
+  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
+  <maintainer email="filiparamos@fe.up.pt">Filipa Ramos Ferreira</maintainer>
+  <license>MIT</license>
+ 
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_export_depend>geometry_msgs</build_export_depend>
+  <build_export_depend>nav_msgs</build_export_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+</package>
