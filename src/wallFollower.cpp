@@ -81,20 +81,17 @@ void WallFollower::correct_movement() {
     else movement_publisher(max_linear, M_PI/2);
 }
 
-bool WallFollower::check_inf(float dist) {
-    return dist > 3.5 ? true : false;
-}
-
 void WallFollower::do_smth() {
+    auto dist = find_min_radius();
+    if (do_eval) eval.eval_iter(dist);
     // front, left, fleft, right, fright
     if (closest_wall.min_ranges[0] > t_dist && closest_wall.min_ranges[2] > t_dist && closest_wall.min_ranges[4] > t_dist) {
         state = 0;
     } else if (closest_wall.min_ranges[0] < t_dist && closest_wall.min_ranges[2] > t_dist && closest_wall.min_ranges[4] > t_dist) {
         state = 1;
     } else if (closest_wall.min_ranges[0] > t_dist && closest_wall.min_ranges[2] > t_dist && closest_wall.min_ranges[4] < t_dist) {
-        auto dist = find_min_radius();
-        if (dist < t_dist - 0.05) { side = "right"; }
-        else if (dist > t_dist + 0.05) { side = "left"; }
+        if (dist < t_dist - threshold) { side = "right"; }
+        else if (dist > t_dist + threshold) { side = "left"; }
         else { side = "none"; }
         state = 2;
     } else if (closest_wall.min_ranges[0] > t_dist && closest_wall.min_ranges[2] < t_dist && closest_wall.min_ranges[4] > t_dist) {
@@ -109,7 +106,6 @@ void WallFollower::do_smth() {
         state = 0;
     }
     ROS_INFO_STREAM("[State] Changing to state " << state);
-    if (do_eval) eval.eval_iter(find_min_radius());
 }
 
 void WallFollower::laser_callback(const sensor_msgs::LaserScan::ConstPtr& msg) {
@@ -151,7 +147,7 @@ int main(int argc, char *argv[]) {
     WallFollower r;
     r.set_eval(true);
 
-    ros::Rate rate(50);
+    ros::Rate rate(100);
     while(ros::ok()) {
         int state = r.get_state();
         if (state == 0) r.find_wall();

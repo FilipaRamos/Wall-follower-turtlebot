@@ -1,14 +1,24 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="model" default="waffle" doc="model type [burger, waffle, waffle_pi]"/>
-  <arg name="x_pos" default="0.4"/>
-  <arg name="y_pos" default="0.3"/>
+  <!-- The default position of the robot will be inside of the B-wall -->
+  <arg name="inside" default="1"/>
+
+  <!-- These default arguments are changed in accordance with the boolean inside -->
+  <arg name="x_pos" default="-2" if="$(arg inside)"/>
+  <arg name="x_pos" default="-6" unless="$(arg inside)"/>
+
+  <arg name="yaw" default="-1.58" if="$(arg inside)"/>
+  <arg name="yaw" default="1.58" unless="$(arg inside)"/>
+  
+  <!-- These default arguments stay the same either on the inside or outside -->
+  <arg name="y_pos" default="1.8"/>
   <arg name="z_pos" default="0.0"/>
   <arg name="roll" default="0.0"/>
   <arg name="pitch" default="0.0"/>
-  <arg name="yaw" default="-1.5"/>
   
-  <arg name="world" default="bwall"/>
+  <!-- The default world to launch -->
+  <arg name="world" default="bwall-round"/>
 
   <env name="GAZEBO_MODEL_PATH" value="$(find turtlebot3_wall)/models"/>
   <include file="$(find turtlebot3_wall)/launch/wall.launch">

@@ -56,7 +56,6 @@ public:
     void turn_left();
     void follow_wall();
     void correct_movement();
-    bool check_inf(float dist);
 
     void laser_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
     void odom_callback(const nav_msgs::Odometry::ConstPtr& msg);

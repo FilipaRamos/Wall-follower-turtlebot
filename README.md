@@ -1,6 +1,61 @@
 # Designing a purely reactive wall follower robot
 
-Hello! Welcome to this repository. You can find here the turtlebot3_wall package which enables a reactive wall follower turtlebot on a Gazebo simulation.
+Hello! Welcome to this repository. You can find here the turtlebot3_wall package which enables a reactive wall follower turtlebot running on Gazebo simulation.
+
+## Directory Structure
+
+This package is organised as recommended by ROS documentation. The structure is as follows:
+
+```
+turtlebot3_wall
+│   README.md
+│   package.xml
+|   LICENSE
+|   CMakeLists.txt
+|   .gitignore
+|   
+└───eval
+|   │   evaluation.py
+|   │   range_errors.png
+|   │   range_errors.txt
+|   │   
+|  
+└───include
+│   │
+│   └───turtlebot3_wall
+│   
+└───launch
+|   │   turtlebot3_wall_follower.launch
+|   │   wall.launch
+|   │   
+|  
+└───models
+|   │   bwall-round.stl
+|   │   bwall-sharp.stl
+|   │   bwall-stretch.stl
+|   │   bwall-verbana.stl
+|   │   bwall.stl
+|   │   
+│   
+└───rviz
+|   │   turtlebot3_gazebo_rviz.rviz
+|   │   
+│   
+└───src
+|   │   wallFollower.cpp
+|   │   wallFollower.h
+|   │   evaluation.cpp
+|   │   evaluation.h
+|   │   
+│   
+└───worlds
+|   │   bwall-round.world
+|   │   bwall-sharp.world
+|   │   bwall-stretch.world
+|   │   bwall-verbana.world
+|   │   bwall.world
+|   │   
+|
 
 ## Dependencies
 
@@ -40,3 +95,7 @@ All the needed modules are conveniently loaded directly through a launch file. A
 This will launch the default world. 3 other worlds are available for testing. To swith worlds, simply add the argument to the command with the name of the desired world. For example, we can open the sharp corners B wall world by calling:
 
 > roslaunch turtlebot3_wall turtlebot3_wall_follower.launch world:=bwall-sharp
+
+The robot will be spawned on the default location (along the straight segment) on the inside of the B-shaped wall unless we specify otherwise by making the inside parameter false:
+
+> roslaunch turtlebot3_wall turtlebot3_wall_follower.launch world:=bwall-sharp inside:=false
