@@ -29,7 +29,7 @@
     </physics>
 
     <model name="bwall">
-      <pose>0.5 0 0  0 0 0</pose>
+      <pose>-3 -6 0  0 0 0</pose>
       <static>true</static>
       <self_collide>1</self_collide>
       <link name="body">

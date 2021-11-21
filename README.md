@@ -27,8 +27,7 @@ In order to meet dependencies, first install the turtlebot package from your pre
 
 Download the turtlebot3_wall package from github or clone this repository. Place the turtlebot3_wall folder under ~/catkin_ws/src. Then the package needs to be built.
 
-> cd ~/catkin_ws
-> catkin_make
+> cd ~/catkin_ws && catkin_make
 
 And we are done!
 

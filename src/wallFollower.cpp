@@ -7,8 +7,9 @@ Wall::Wall(){}
 *
 * @attrib state - initialized to 0 to start in state 'find the wall'
 */
-WallFollower::WallFollower() {
+WallFollower::WallFollower() : eval(), threshold(0.1) {
     state = 0;
+    side = "none";
     // Init subscribers
     laser_sub = n.subscribe("/scan", 1, &WallFollower::laser_callback, this);
     odom_sub = n.subscribe("/odom", 1, &WallFollower::odom_callback, this);
@@ -19,6 +20,10 @@ WallFollower::WallFollower() {
 
 int WallFollower::get_state() const {
     return state;
+}
+
+void WallFollower::set_eval(bool do_eval) {
+    do_eval = do_eval;
 }
 
 float WallFollower::min_range(int left, int right, const std::vector<float> ranges) {
@@ -58,16 +63,26 @@ float WallFollower::find_min_radius() {
 }
 
 void WallFollower::find_wall() {
-    movement_publisher(max_linear, -max_linear/find_min_radius());
+    movement_publisher(max_linear, -5*max_linear/find_min_radius());
 }
 
 void WallFollower::turn_left() {
-    if (closest_wall.min_ranges.empty()) movement_publisher(max_linear, M_PI/8);
-    else movement_publisher(max_linear, max_linear/find_min_radius());
+    movement_publisher(max_linear, 5*max_linear/find_min_radius());
 }
 
 void WallFollower::follow_wall() {
-    movement_publisher(max_linear, 0);
+    if (side == "none") movement_publisher(max_linear, 0);
+    else if (side == "left") movement_publisher(max_linear, -M_PI/8);
+    else movement_publisher(max_linear, M_PI/8);
+}
+
+void WallFollower::correct_movement() {
+    if (side == "left") movement_publisher(max_linear, -M_PI/2);
+    else movement_publisher(max_linear, M_PI/2);
+}
+
+bool WallFollower::check_inf(float dist) {
+    return dist > 3.5 ? true : false;
 }
 
 void WallFollower::do_smth() {
@@ -77,6 +92,10 @@ void WallFollower::do_smth() {
     } else if (closest_wall.min_ranges[0] < t_dist && closest_wall.min_ranges[2] > t_dist && closest_wall.min_ranges[4] > t_dist) {
         state = 1;
     } else if (closest_wall.min_ranges[0] > t_dist && closest_wall.min_ranges[2] > t_dist && closest_wall.min_ranges[4] < t_dist) {
+        auto dist = find_min_radius();
+        if (dist < t_dist - 0.05) { side = "right"; }
+        else if (dist > t_dist + 0.05) { side = "left"; }
+        else { side = "none"; }
         state = 2;
     } else if (closest_wall.min_ranges[0] > t_dist && closest_wall.min_ranges[2] < t_dist && closest_wall.min_ranges[4] > t_dist) {
         state = 0;
@@ -90,6 +109,7 @@ void WallFollower::do_smth() {
         state = 0;
     }
     ROS_INFO_STREAM("[State] Changing to state " << state);
+    if (do_eval) eval.eval_iter(find_min_radius());
 }
 
 void WallFollower::laser_callback(const sensor_msgs::LaserScan::ConstPtr& msg) {
@@ -127,13 +147,11 @@ void WallFollower::trajectory_publisher(std_msgs::Header header, geometry_msgs::
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "follow_wall");
 
-
-    //WallFollower r(std::atof(argv[0]));
     ROS_INFO_STREAM("Starting up the Wall Follower Robot!");
     WallFollower r;
+    r.set_eval(true);
 
-    // Check for robot at initial position. while pose != orig_pose
-    ros::Rate rate(20);
+    ros::Rate rate(50);
     while(ros::ok()) {
         int state = r.get_state();
         if (state == 0) r.find_wall();

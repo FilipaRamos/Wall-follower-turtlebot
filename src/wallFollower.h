@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <sstream>
 #include <math.h>
+#include <stdio.h> 
 #include <stdlib.h>
 #include <bits/stdc++.h>
 
@@ -12,11 +13,11 @@
 #include "sensor_msgs/LaserScan.h"
 #include "geometry_msgs/PoseStamped.h"
 
+#include "evaluation.h"
+
 class Wall {
 public:
     std::vector<float> min_ranges;
-    double angle;
-    std::string heading;
     Wall();
 };
 
@@ -32,14 +33,19 @@ class WallFollower {
     nav_msgs::Path traj_msg;
 
     int state;
+    bool do_eval;
+    std::string side;
     Wall closest_wall;
+    Evaluation eval;
 
+    const float threshold;
     static constexpr double max_angle = 1.82;
     static constexpr double max_linear = 0.26;
     static constexpr float t_dist = 1.0;
 public:
     WallFollower();
     int get_state() const;
+    void set_eval(bool do_eval);
     void find_closest_walls(const std::vector<float> ranges);
     float extract_min(int left, int right, const std::vector<float> ranges);
     float min_range(int left, int right, const std::vector<float> ranges);
@@ -49,6 +55,8 @@ public:
     void find_wall();
     void turn_left();
     void follow_wall();
+    void correct_movement();
+    bool check_inf(float dist);
 
     void laser_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
     void odom_callback(const nav_msgs::Odometry::ConstPtr& msg);
