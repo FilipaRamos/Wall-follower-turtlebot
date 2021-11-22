@@ -114,4 +114,4 @@ A Python evaluation script is also included on the evaluation folder. After runn
 
 > roscd turtlebot3_wall && cd eval && python3 evaluation.py
 
-Keep in mind that the range_errors.png file needs to be emptied (but not deleted!) by hand after the evaluation script is run.
+Keep in mind that the range_errors.txt file is refreshed every time the wall following module is run. As such, the evaluation script must be called before running the turtlebot3_wall again.
