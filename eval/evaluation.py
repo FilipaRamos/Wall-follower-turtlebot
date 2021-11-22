@@ -35,6 +35,20 @@ def save_error_plot(errors):
     fig.savefig('range_errors.png')
     plt.close(fig)
 
+def plot_vel_rel():
+    y = [0.1368, 0.0959, 0.0770, 0.0747]
+    x = [0.26, 0.195, 0.13, 0.065]
+
+    from matplotlib import pyplot as plt
+    fig, ax = plt.subplots(nrows=1, ncols=1)
+    ax.set_xlabel('Linear velocity (v)')
+    ax.set_ylabel('Absolute Average Range Error (m/t_s)')
+    ax.set_title('Linear velocity relationship with the absolute average range error')
+
+    ax.plot(x, y)
+    fig.savefig('vel_rel.png')
+    plt.close(fig)
+
 def main():
     errors = load_errors()
 

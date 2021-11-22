@@ -18,6 +18,7 @@ turtlebot3_wall
 |   │   evaluation.py
 |   │   range_errors.png
 |   │   range_errors.txt
+|   │   vel_rel.png
 |   │   
 |  
 └───include
@@ -58,6 +59,8 @@ turtlebot3_wall
 |
 ```
 
+The eval folder contains the evaluation script in Python and the files where the range errors and plots are saved. The launch folder includes the launch files for the package and the models encapsulates the 3D CAD files utilised for the wall designs. The rviz folder has a configuration for the viewer. The src folder contains the source code of the package and the worlds folder is a container of world files that allow the simulation worlds to be built for Gazebo.
+
 ## Dependencies
 
 The only dependencies of the package are entirely related to ROS, with its installation and some turtlebot3 packages needed for execution.
@@ -89,14 +92,26 @@ And we are done!
 
 # Execution
 
-All the needed modules are conveniently loaded directly through a launch file. As such, you simply need to run:
+All the needed modules are conveniently loaded directly through a launch file. As such, you simply need to run on one terminal:
 
-> roslaunch turtlebot3_wall turtlebot3_wall_follower.launch
+> roslaunch turtlebot3_wall turtlebot3_wall_follower.launch 
 
-This will launch the default world. 3 other worlds are available for testing. To swith worlds, simply add the argument to the command with the name of the desired world. For example, we can open the sharp corners B wall world by calling:
+This will launch the default world. 3 other worlds are available for testing. To switch worlds, simply add the argument to the command with the name of the desired world. For example, we can open the sharp corners B wall world by calling:
 
 > roslaunch turtlebot3_wall turtlebot3_wall_follower.launch world:=bwall-sharp
 
 The robot will be spawned on the default location (along the straight segment) on the inside of the B-shaped wall unless we specify otherwise by making the inside parameter false:
 
 > roslaunch turtlebot3_wall turtlebot3_wall_follower.launch world:=bwall-sharp inside:=false
+
+Once the simulation world is up and running, the wall following algorithm can be started with the following command:
+
+> rosrun turtlebot3_wall wallf
+
+The algorithm only terminates when the user inputs a break signal such as Ctrl+C.
+
+A Python evaluation script is also included on the evaluation folder. After running the wall following algorithm, the evaluation can be called by running the following commands:
+
+> roscd turtlebot3_wall && cd eval && python3 evaluation.py
+
+Keep in mind that the range_errors.png file needs to be emptied (but not deleted!) by hand after the evaluation script is run.
