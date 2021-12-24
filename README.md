@@ -2,7 +2,7 @@
 
 Hello! Welcome to this repository. You can find here the turtlebot3_wall package which enables a reactive wall follower turtlebot running on Gazebo simulation.
 
-![Wall-follower-turtlebot on the outside trajectory of a B-shaped wall.](resources/B-round-outside-1-real.png)
+<img src="resources/B-round-outside-1-real.png" alt="wall-follower" width="100"/>
 
 ## Directory Structure
 
